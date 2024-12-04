@@ -16,8 +16,8 @@ export default function Home() {
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
       <Card sx={{ width: '100%', maxWidth: 400, p: 2 }}>
         <CardHeader
-          title="Welcome to 21120041's App"
-          subheader="There are my IA03-04's projects"
+          title="Welcome to 21120041-50-76's App"
+          subheader="There are our G02 projects"
           sx={{ textAlign: 'center' }}
         />
         <CardContent>
