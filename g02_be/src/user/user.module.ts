@@ -9,7 +9,7 @@ import { GoogleStrategy } from '@/auth/google.strategies';
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
-  providers: [UserService, GoogleStrategy],
+  providers: [UserService],
   controllers: [UserController],
 })
 export class UserModule {}

@@ -39,7 +39,7 @@ export class UserService {
     }
   }
 
-  async login(getUserDto: GetUserDto): Promise<{ token: string; user: { username: string; email: string } }> {
+  async login(getUserDto: GetUserDto): Promise<{ token: string; }> {
     const { email, password } = getUserDto;
   
     const user = await this.userModel.findOne({ email });
@@ -55,32 +55,30 @@ export class UserService {
     const payload = { username: user.username, email: user.email, sub: user._id };
     const token = this.jwtService.sign(payload);
   
-    return {
-      token,
-      user: {
-        username: user.username,
-        email: user.email,
-      },
-    };
+    return { token };
   }
   
 
-  async handleGoogleUser(profile: any): Promise<string> {
-    const { googleId, email, fullName, avatar } = profile;
-    let user = await this.userModel.findOne({ googleId });
+  async handleGoogleUser(profile: any): Promise<{ token: string; }> {
+    const { googleId, email, fullName } = profile;
+    let user = await this.userModel.findOne({ email });
 
     if (!user) {
       user = new this.userModel({
         googleId,
         email,
-        fullName,
-        avatar,
+        username: fullName,
+        password: process.env.DEFAULT_PASSWORD,
       });
       await user.save();
     }
+    if (!user.googleId){
+      let res = await this.userModel.updateOne({ email }, { googleId });
+    }
 
     // Tạo JWT token
-    const payload = { email: user.email, sub: user._id };
-    return this.jwtService.sign(payload);
+    const payload = { email: user.email, username: user.username, sub: user._id };
+    const token = this.jwtService.sign(payload);
+    return { token };
   }
 }

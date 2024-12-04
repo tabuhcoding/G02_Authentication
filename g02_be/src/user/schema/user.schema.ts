@@ -17,6 +17,9 @@ export class User extends Document {
 
   @Prop({ required: false, unique: true })
   googleId: string;
+
+  @Prop({ required: false })
+  avatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

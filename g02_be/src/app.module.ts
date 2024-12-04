@@ -8,6 +8,7 @@ import { JwtStrategy } from './auth/jwt.strategies';
 import { JwtAuthMiddleware } from './auth/middlewares/jwt-auth.middleware';
 import { User, UserSchema } from './user/schema/user.schema';
 import { ConfigModule } from '@nestjs/config';
+import { GoogleStrategy } from './auth/google.strategies';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, JwtStrategy],
+  providers: [UserService, JwtStrategy, GoogleStrategy],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

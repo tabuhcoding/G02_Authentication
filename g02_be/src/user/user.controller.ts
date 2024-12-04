@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, Request, Res, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Res, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
@@ -37,11 +37,7 @@ export class UserController {
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req: ExpressRequest, @Res() res: Response) {
     const user = req.user; // Thông tin người dùng từ Google
-    const token = await this.userService.handleGoogleUser(user);
-
-    // Set cookie with the token
-    res.cookie('token', token, { httpOnly: true });
-
-    return res.redirect('/');
+    const {token} = await this.userService.handleGoogleUser(user);
+    return res.redirect(`http://localhost:3000/login-success?token=${token}`);
   }
 }
