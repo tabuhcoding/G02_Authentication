@@ -1,7 +1,7 @@
 import { useUser } from "../helpers/useContext";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, CardContent, CardHeader, Typography, CircularProgress } from "@mui/material";
-import { LogOut } from "lucide-react";
+import { Button, Card, CardContent, CardHeader, Typography, CircularProgress, Avatar } from "@mui/material";
+import { LogOut, User } from "lucide-react";
 import { deleteCookie } from "../helpers/cookies";
 
 export default function Profile() {
@@ -25,6 +25,15 @@ export default function Profile() {
     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", backgroundColor: "#f5f5f5" }}>
       <Card sx={{ width: "100%", maxWidth: 400, p: 2 }}>
         <CardHeader
+          avatar={
+            <Avatar
+              src={user.avatar}
+              alt={user.username}
+              sx={{ width: 80, height: 80, margin: '0 auto' }}
+            >
+              {!user.avatar && <User size={40} />}
+            </Avatar>
+          }
           title={<Typography variant="h5" component="h2">Trang cá nhân</Typography>}
           subheader={<Typography variant="body2" color="textSecondary">Thông tin người dùng</Typography>}
           sx={{ textAlign: "center" }}

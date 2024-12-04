@@ -52,7 +52,7 @@ export class UserService {
       throw new UnauthorizedException('Invalid email or password');
     }
   
-    const payload = { username: user.username, email: user.email, sub: user._id };
+    const payload = { username: user.username, email: user.email, avatar: user.avatar, sub: user._id };
     const token = this.jwtService.sign(payload);
   
     return { token };
@@ -60,7 +60,7 @@ export class UserService {
   
 
   async handleGoogleUser(profile: any): Promise<{ token: string; }> {
-    const { googleId, email, fullName } = profile;
+    const { googleId, email, fullName, avatar } = profile;
     let user = await this.userModel.findOne({ email });
 
     if (!user) {
@@ -69,15 +69,16 @@ export class UserService {
         email,
         username: fullName,
         password: process.env.DEFAULT_PASSWORD,
+        avatar,
       });
       await user.save();
     }
-    if (!user.googleId){
-      let res = await this.userModel.updateOne({ email }, { googleId });
+    if (!user.googleId || !user.avatar) {
+      let res = await this.userModel.updateOne({ email }, { googleId, avatar });
     }
 
     // Tạo JWT token
-    const payload = { email: user.email, username: user.username, sub: user._id };
+    const payload = { email: user.email, username: user.username , avatar: avatar , sub: user._id };
     const token = this.jwtService.sign(payload);
     return { token };
   }
