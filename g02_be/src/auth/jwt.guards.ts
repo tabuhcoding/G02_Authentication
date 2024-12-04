@@ -1,29 +1,19 @@
-//src/auth/jwt.guards.ts
 import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtService } from '@nestjs/jwt';
-import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private jwtService: JwtService, private reflector: Reflector) {
-    super();
-  }
-
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    const token = request.headers.authorization?.split(' ')[1];
-
+    
+    // Lấy token từ cookie
+    const token = request.cookies?.token;
     if (!token) {
-      throw new UnauthorizedException('Token not found');
+      throw new UnauthorizedException('Authentication token is missing');
     }
 
-    try {
-      const payload = this.jwtService.verify(token);
-      request.user = payload;  // Gắn thông tin người dùng vào request
-      return true;
-    } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
-    }
+    // Gắn token vào headers để Passport xử lý
+    request.headers.authorization = `Bearer ${token}`;
+    return super.canActivate(context);
   }
 }

@@ -39,29 +39,48 @@ export class UserService {
     }
   }
 
-  async login(getUserDto: GetUserDto): Promise<{ message: string, token: string, user: { username: string, email: string } }> {
+  async login(getUserDto: GetUserDto): Promise<{ token: string; user: { username: string; email: string } }> {
     const { email, password } = getUserDto;
-
+  
     const user = await this.userModel.findOne({ email });
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
-
+  
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
     }
-
+  
     const payload = { username: user.username, email: user.email, sub: user._id };
     const token = this.jwtService.sign(payload);
-
+  
     return {
-      message: 'User logged in successfully',
       token,
       user: {
         username: user.username,
         email: user.email,
       },
     };
+  }
+  
+
+  async handleGoogleUser(profile: any): Promise<string> {
+    const { googleId, email, fullName, avatar } = profile;
+    let user = await this.userModel.findOne({ googleId });
+
+    if (!user) {
+      user = new this.userModel({
+        googleId,
+        email,
+        fullName,
+        avatar,
+      });
+      await user.save();
+    }
+
+    // Tạo JWT token
+    const payload = { email: user.email, sub: user._id };
+    return this.jwtService.sign(payload);
   }
 }

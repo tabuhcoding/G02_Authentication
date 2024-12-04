@@ -1,9 +1,10 @@
-// src/user/user.controller.ts
-import { Body, Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Request, Res, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { JwtAuthGuard } from '../auth/jwt.guards';
+import { AuthGuard } from '@nestjs/passport';
+import { Response, Request as ExpressRequest } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +22,26 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  async getProfile(@Request() req) {
-    return { message: 'User profile fetched successfully', user: req.user };
+  async getProfile(@Req() req: ExpressRequest) {
+    const user = req.user; // `req.user` được gắn bởi JwtAuthGuard sau khi token được xác minh
+    return { message: 'User profile fetched successfully', user };
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {
+    // Initiates Google authentication
+  }
+
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(@Req() req: ExpressRequest, @Res() res: Response) {
+    const user = req.user; // Thông tin người dùng từ Google
+    const token = await this.userService.handleGoogleUser(user);
+
+    // Set cookie with the token
+    res.cookie('token', token, { httpOnly: true });
+
+    return res.redirect('/');
   }
 }

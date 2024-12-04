@@ -14,6 +14,9 @@ export class User extends Document {
 
   @Prop({ default: Date.now })
   createdAt: Date;
+
+  @Prop({ required: false, unique: true })
+  googleId: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
