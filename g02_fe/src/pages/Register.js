@@ -14,11 +14,6 @@ export default function Register() {
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
-  const token = localStorage.getItem('token')
-  if (token) {
-    navigate('/profile')
-  }
-
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prevState => ({

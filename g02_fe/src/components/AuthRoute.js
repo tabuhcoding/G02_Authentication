@@ -4,7 +4,8 @@ import { getCookie } from '../helpers/cookies';
 
 function AuthRoute({ children }) {
   const token = getCookie('token');
-  return token ? children : <Navigate to="/profile" />;
+  console.log(token);
+  return !token ? children : <Navigate to="/profile" />;
 }
 
 export default AuthRoute;

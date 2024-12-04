@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import { Button, TextField, Card, CardContent, CardHeader, Typography, Divider, Link } from '@mui/material';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
-import { setCookie, getCookie } from '../helpers/cookies';
+import { setCookie } from '../helpers/cookies';
 // import Cookies from 'js-cookie'
 
 const GoogleIcon = () => (
@@ -21,14 +21,6 @@ export default function Login() {
   const [message, setMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = getCookie('token');
-    console.log(token);
-    if (token) {
-      navigate('/profile');
-    }
-  }, [navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
