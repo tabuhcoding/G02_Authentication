@@ -7,7 +7,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const request = context.switchToHttp().getRequest();
     
     // Lấy token từ cookie
-    const token = request.cookies?.token;
+    const token = request.headers.authorization?.split(' ')[1];
     if (!token) {
       throw new UnauthorizedException('Authentication token is missing');
     }
