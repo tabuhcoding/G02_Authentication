@@ -17,6 +17,7 @@ function ProtectedRoute({ children }) {
       }
 
       try {
+        console.log(token);
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/user/profile`, {
           headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
