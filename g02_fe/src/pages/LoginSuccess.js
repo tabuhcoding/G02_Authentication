@@ -9,7 +9,6 @@ export default function LoginSuccess() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
-    console.log(token);
     if (token) {
       setCookie("token", token, 7);
       setMessage('Login successful. Redirecting to profile page...')

@@ -4,7 +4,10 @@
 
 export const setCookie = (name, value, days) => {
   const expires = new Date(Date.now() + days * 864e5).toUTCString();
-  document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+  const isSecure = window.location.protocol === 'https:'; // Kiểm tra nếu HTTPS
+  document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=None; ${
+    isSecure ? 'Secure;' : ''
+  }`;
 };
 
 export const getCookie = (name) => {
