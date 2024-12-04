@@ -1,8 +1,9 @@
 // src/components/ProtectedRoute.js
 import { Navigate } from 'react-router-dom';
+import { getCookie } from '../helpers/cookies';
 
 function ProtectedRoute({ children }) {
-  const token = localStorage.getItem('token');
+  const token = getCookie('token');
   return token ? children : <Navigate to="/login" />;
 }
 

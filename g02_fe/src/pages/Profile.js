@@ -5,6 +5,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { Button, Card, CardContent, CardHeader, Typography, CircularProgress, Alert } from '@mui/material'
 import { LogOut } from 'lucide-react'
+import { getCookie, deleteCookie } from '../helpers/cookies'
 
 export default function Profile() {
   const [user, setUser] = useState(null)
@@ -13,15 +14,12 @@ export default function Profile() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      navigate('/login')
-      return
-    }
-
+    const token = getCookie('token')
+    console.log(token)
     axios
       .get(`${process.env.REACT_APP_BACKEND_URL}/user/profile`, {
         headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       })
       .then((response) => {
         setUser(response.data.user)
@@ -34,7 +32,7 @@ export default function Profile() {
   }, [navigate])
 
   const handleLogout = () => {
-    localStorage.removeItem('token')
+    deleteCookie('token')
     navigate('/')
   }
 
